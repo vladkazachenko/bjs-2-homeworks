@@ -32,15 +32,15 @@ function cachingDecoratorNew(func) {
 function debounceDecoratorNew(func, delay) {
   let timeoutId = null;
   let lastArgs = null;
-  let isFirstCall = true;
+  let isCooldown = false;
 
   function wrapper(...args) {
     wrapper.allCount++;
 
-    if (isFirstCall) {
+    if (!isCooldown) {
       wrapper.count++;
       func(...args);
-      isFirstCall = false;
+      isCooldown = true;
     } else {
       lastArgs = args;
     }
@@ -53,7 +53,7 @@ function debounceDecoratorNew(func, delay) {
         func(...lastArgs);
         lastArgs = null;
       }
-      timeoutId = null;
+      isCooldown = false;
     }, delay);
   }
 
